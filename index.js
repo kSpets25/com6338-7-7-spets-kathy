@@ -1,6 +1,6 @@
 // Your code here
 //create array of questions
-var questionArr = [ 
+var questionsArr = [ 
     {
         question: 'In what country was volleyball invented?',
         answer: 'USA',
@@ -39,7 +39,7 @@ var questionArr = [
     },
     {
         question: 'If the server steps on the end line while serving, this is considered what?',
-        answer: 'Foot Falt',
+        answer: 'Foot Fault',
         options: [
             'Infraction',
             'Foot Falt',
@@ -47,140 +47,162 @@ var questionArr = [
 
     },  
 ]
-console.log(questionArr)
+console.log(questionsArr)
 
-    //div element
-const quiz = document.getElementById('quiz')
+    //div element provided
+const quizContainer = document.getElementById('quiz')
 
- //consturct previous score
-var prevScore = document.createElement("previous-Score")
-prevScore.setAttribute('content', 'text content')
-prevScore.textContent = 'previoous score'
-console.log(prevScore)
-
-
-localStorage.setItem(prevScore, '%')
- 
-    //construct button element
-const startBtn = document.createElement("button")
-startBtn.setAttribute('id', 'start-quiz');
-startBtn.textContent = 'Start Quiz!';
-quiz.appendChild(startBtn);
-
-
-    //construct (p) element for question
-var para = document.createElement('p')
-para.setAttribute('id', 'Question');
-quiz.appendChild(para)
-
-
-//create options buttons
-var optionBtn1= document.createElement("button")
-var optionBtn2= document.createElement("button")
-optionBtn1.setAttribute = ('id', 'option1');
-optionBtn2.setAttribute = ('id', 'option2');
-console.log(optionBtn1, optionBtn2);
-
-var timer;
-var correct;
-var correctAnswer;
+var currentQuestion = 0
 var numCorrect = 0
-var selected;
+var timer;
+var correctAnswer;
+var score = 0
+var remainingTime = 0
 
+var startBtn = document.createElement("button")
 
-    
-function startQuiz() {
-        //display start button
-
-        //create and display count down clock of 10sec
-       
-
-        //on page load check check if plalyer played before
-        //if previous score ,user has played before         
-        if (localStorage.getItem(prevScore) > 0) {
-            prevScore.textContent = ('Previous Score');
-            quiz.appendChild(prevScore); 
-            console.log('previous score') 
+function startQuiz()  {      
+    //on page load check check if plalyer played before
+        //if previous score ,user has played before
+        var score = 0
+        questText = 0
+        var numCorrect = 0
+        quizContainer.innerHTML = ""
+        
+        var prevScore = localStorage.getItem('prevScore') 
+        if (prevScore) {
+            var prevScoreEl = document.createElement('p');
+            prevScoreEl.textContent = ('Previous Score = ' + prevScore + '%');
+            quizContainer.appendChild(prevScoreEl); 
+            console.log(prevScore) 
         } 
-}  
+        //display start button
+        startBtn.setAttribute('id', 'start-quiz');
+        startBtn.textContent = 'Start Quiz!';
+        quizContainer.appendChild(startBtn);      
+} 
+
 //START button with attribut of 'start-quiz'
-startBtn.onclick = function(e) {
-
+startBtn.onclick = function() {
+        
         //delay 3 seconds before starting
-        //create quiz h2 element
-        //var intervalId = set interval(function())
+        setTimeout(() => {
+            // 3 second delay here before running next line
+        }, 3000)
+        displayQuestion();
+}
         
-        var numCorrect = 0;
+function displayQuestion() {
+        
+        quizContainer.innerHTML = "" //clear current question
+        if (currentQuestion >= questionsArr.length) {
+            endGame(); //end game function
+            return; //done with loop
+        }
+            console.log([currentQuestion])//where in the array
+        
         //display question
-        para.textContent = "Question";
+        var quesText = document.createElement('p')
+        quesText.setAttribute('id', 'Question');
+        
+        quizContainer.appendChild(quesText)
+        quesText.textContent = "Question";
         console.log('after startbn')
-
         
-       
+        console.log(questionsArr[currentQuestion].question)
+        //show question on page
+        quesText.textContent = (questionsArr[currentQuestion].question);
+        //display buttons
+        var optionBtn1= document.createElement("button")
+        var optionBtn2= document.createElement("button")
+        optionBtn1.setAttribute = ('id', 'option1');
+        optionBtn2.setAttribute = ('id', 'option2');
 
-        //for loop to display questions
-        
-        for (var i=0; i < questionArr.length; i++)
-              //display question
-            questionArr.forEach(element => { 
-            //i=0
-            console.log(questionArr[i].question)
-            //show question on page
-            para.textContent = (questionArr[i].question);
-             //display buttons
-            var optionBtn1= document.createElement("button")
-            var optionBtn2= document.createElement("button")
-            optionBtn1.setAttribute = ('id', 'option1');
-            optionBtn2.setAttribute = ('id', 'option2');
-            optionBtn1.textContent = (questionArr[i].options[0])
-            optionBtn1.addEventListener("click", function(e){
-                e.target.onclick
-                console.log(optionBtn1, 'button click')
-            })
-            optionBtn2.textContent = (questionArr[i].options[1])
-            optionBtn2.addEventListener("click", function(e) {
-                e.target.onclick
-                console.log(optionBtn2, 'button click 2')
-            })
-            console.log(optionBtn1, optionBtn2)
-            quiz.appendChild(optionBtn1);
-            quiz.appendChild(optionBtn2);
-
-            //function button(s) click to select each option
-           var correctAnswer = (questionArr[i].answer);
-               
-                choice(optionBtn1.textContent, correctAnswer);  
+        optionBtn1.textContent = (questionsArr[currentQuestion].options[0])
+        optionBtn1.addEventListener("click", handleOptionClick);
+    
+        optionBtn2.textContent = (questionsArr[currentQuestion].options[1])
+        optionBtn2.addEventListener("click", handleOptionClick); 
             
+        console.log(optionBtn1, optionBtn2)
+        quiz.appendChild(optionBtn1);
+        quiz.appendChild(optionBtn2);
+        
+
+        //function button(s) click to select each option
+        var correctAnswer = (questionsArr[currentQuestion].answer);
             
-                choice(optionBtn2.textContent, correctAnswer);   
-            //};
+        //};
         
-        //calculate previous score
-        //divide correct answers by questionArr.length and set to questionArr.prevScore// (percentage)
-       
-        var score = Math.round((numCorrect / questionArr.length) * 100);
-        quiz.appendChild(score)
-        console.log(numCorrect, 'number correct')
-        //show previous score
-    });
-}   
+        function handleOptionClick (e) {
+            const selectedAnswer = e.target.textContent;
+            const correctAnswer = questionsArr[currentQuestion].answer;
+
+        if (selectedAnswer === correctAnswer) {
+            numCorrect++;
+            console.log('Correct!');
+            // clear the timer
+            clearInterval(remainingTime);
+            
+            //runTimer()
+        } else {
+            console.log('incorrect!');
+            clearInterval(remainingTime);
+
+        }
+
+        clearInterval(remainingTime);
+        clearQuestion()  
+        } 
         
-function choice(selected, correctAnswer) {
-    if (selected == correctAnswer) {
-        console.log('correct answer !')
-        numCorrect++
-    }
-    console.log(selected)
-    console.log(correctAnswer)
+        runTimer()       
+          
 }
 
+function clearQuestion() {
+    currentQuestion.texContent = ''; // clear the current question and options
+    currentQuestion++;
+    displayQuestion(); // Display the next question or score
+}
+function runTimer() {
+        
+        //var remainingTime = document.createElement('timer')
+        
+        var remainingTimeEl = document.createElement('p');
+        remainingTimeEl.textContent = remainingTime;
+        quizContainer.appendChild(remainingTimeEl); 
+        console.log(remainingTime) 
 
-//function timer(){
-     // countdown clock in quiz h2 element with 1 sec between ticks
-        //after the timer reacher 0 make h2 read "times up"
-        // one sect after that move on to next qustion.
-//}
-//var intervalId = setInterval(function(){}
+        var counter= 30;
+        counter = remainingTime
+        remainingTime = setInterval(function(){
+        console.log(remainingTime);
+        remainingTime--
+        if (remainingTime === 0) {
+            console.log("Times Up");
+            clearInterval(remainingTime);
+            clearQuestion()   
+        }
+        }, 1000);
+  
+}
+
+function endGame() {
+    var scoreEl = document.createElement('p')
+    var score = ((numCorrect / questionsArr.length) * 100);
+   
+    scoreEl.textContent = ('Final Score = ' + score + '%');
+    quizContainer.appendChild(scoreEl); 
+    console.log(scoreEl) 
+    startQuiz()
+    localStorage.setItem("prevScore", score);
+}
+	//Pass score to previous score. Use local storage.
+    
+
+startQuiz()
+
+
     
 
 
