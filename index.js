@@ -44,7 +44,6 @@ var questionsArr = [
             'Infraction',
             'Foot Falt',
             ]
-
     },  
 ]
 console.log(questionsArr)
@@ -52,12 +51,12 @@ console.log(questionsArr)
     //div element provided
 const quizContainer = document.getElementById('quiz')
 
-var currentQuestion = 0
-var numCorrect = 0
+var currentQuestion = 0;
+var numCorrect = 0;
 var timer;
-var correctAnswer;
-var score = 0
-var remainingTime = 0
+var correctAnswer;;
+var score = 0;
+var remainingTime = 0;
 
 var startBtn = document.createElement("button")
 
@@ -74,12 +73,14 @@ function startQuiz()  {
             var prevScoreEl = document.createElement('p');
             prevScoreEl.textContent = ('Previous Score = ' + prevScore + '%');
             quizContainer.appendChild(prevScoreEl); 
-            console.log(prevScore) 
+            console.log(prevScore)
+            currentQuestion = 0          
         } 
+       
         //display start button
         startBtn.setAttribute('id', 'start-quiz');
         startBtn.textContent = 'Start Quiz!';
-        quizContainer.appendChild(startBtn);      
+        quizContainer.appendChild(startBtn);     
 } 
 
 //START button with attribut of 'start-quiz'
@@ -87,9 +88,9 @@ startBtn.onclick = function() {
         
         //delay 3 seconds before starting
         setTimeout(() => {
-            // 3 second delay here before running next line
         }, 3000)
-        displayQuestion();
+        displayQuestion()
+         
 }
         
 function displayQuestion() {
@@ -128,7 +129,6 @@ function displayQuestion() {
         quiz.appendChild(optionBtn1);
         quiz.appendChild(optionBtn2);
         
-
         //function button(s) click to select each option
         var correctAnswer = (questionsArr[currentQuestion].answer);
             
@@ -148,11 +148,8 @@ function displayQuestion() {
         } else {
             console.log('incorrect!');
             //clearQuestion()
-
         }
-        clearQuestion()
-        // quiz.textContent = ''; // clear the current question and options
-       
+        clearQuestion()      
         } 
         
         runTimer()       
@@ -167,7 +164,6 @@ function clearQuestion() {
 function runTimer() {
         
         //var remainingTime = document.createElement('timer')
-        
         var remainingTimeEl = document.createElement('p');
     
         var counter = 30;
@@ -181,7 +177,6 @@ function runTimer() {
             clearQuestion()   
         }
         }, 1000);
-  
 }
 
 function endGame() {
@@ -194,10 +189,13 @@ function endGame() {
     startQuiz()
     localStorage.setItem("prevScore", score);
 }
-	//Pass score to previous score. Use local storage.
-    
-
 startQuiz()
+
+function restartQuiz() {
+    currentQuestion = 0;
+    displayQuestion();
+}
+    
 
 
     
