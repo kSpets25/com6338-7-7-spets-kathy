@@ -142,25 +142,25 @@ function displayQuestion() {
             numCorrect++;
             console.log('Correct!');
             // clear the timer
-            clearInterval(remainingTime);
+            //clearQuestion()
             
             //runTimer()
         } else {
             console.log('incorrect!');
-            clearInterval(remainingTime);
+            //clearQuestion()
 
         }
-
-        clearInterval(remainingTime);
-        clearQuestion()  
+        clearQuestion()
+        // quiz.textContent = ''; // clear the current question and options
+       
         } 
         
         runTimer()       
-          
 }
 
 function clearQuestion() {
-    currentQuestion.texContent = ''; // clear the current question and options
+    clearInterval(remainingTime);
+    quizContainer.textContent = ''; // clear the current question and options
     currentQuestion++;
     displayQuestion(); // Display the next question or score
 }
@@ -169,17 +169,14 @@ function runTimer() {
         //var remainingTime = document.createElement('timer')
         
         var remainingTimeEl = document.createElement('p');
-        remainingTimeEl.textContent = remainingTime;
-        quizContainer.appendChild(remainingTimeEl); 
-        console.log(remainingTime) 
-
-        var counter= 30;
-        counter = remainingTime
+    
+        var counter = 30;
         remainingTime = setInterval(function(){
-        console.log(remainingTime);
-        remainingTime--
-        if (remainingTime === 0) {
-            console.log("Times Up");
+        remainingTimeEl.textContent = counter;
+        quizContainer.appendChild(remainingTimeEl); 
+        console.log(counter);
+        counter--;
+        if (counter === 0) {
             clearInterval(remainingTime);
             clearQuestion()   
         }
